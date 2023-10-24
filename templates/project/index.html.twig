@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Symfony-CRUD-App
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h2 class="text-center my-5">DEMO-->License Project Manager</h2>
+		<div class="card border-primary mb-3">
+			<div class="card-body">
+				<table class="table border-primary">
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Date Created</th>
+						<th>Date Updated</th>
+						<th width="240px">Action</th>
+					</tr>
+					{% for project in projects %}
+						<tr>
+							<td>{{ project.name }}</td>
+							<td>{{ project.description }}</td>
+							<td>{{ project.createdAt ? project.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td>{{ project.updatedAt ? project.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td>
+								<a class="btn btn-primary" href="{{ path('app_project_show', {'id': project.id}) }}">Show</a>
+								<a class="btn btn-success" href="{{ path('app_project_edit', {'id': project.id}) }}">Edit</a>
+								<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ project.id }}">Delete</button>
+
+								<!-- Modal for deleting the project -->
+								<div class="modal fade" id="deleteModal-{{ project.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ project.id }}" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="deleteModalLabel-{{ project.id }}">Confirm Deletion</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												Are you sure you want to delete
+												{{ project.name }}?
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+												<form method="post" action="{{ path('app_project_delete', {'id': project.id}) }}" style="display: inline;">
+													<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
+													<button type="submit" class="btn btn-danger">Delete</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- End of Modal -->
+							</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}
