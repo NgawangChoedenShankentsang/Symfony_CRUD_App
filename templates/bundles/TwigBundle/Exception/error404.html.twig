@@ -1,0 +1,27 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<h3 class="mb-0">404</h3>
+					</div>
+					<div class="card-body">
+						<form method="post">
+
+							<div class="mb-3">
+								<p>OOPS, THE PAGE YOU ARE LOOKING FOR CAN'T BE FOUND!</p>
+							</div>
+							<div class="d-grid gap-2">
+								<a href="/" class="btn btn-primary btn-lg">Return To Homepage</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
