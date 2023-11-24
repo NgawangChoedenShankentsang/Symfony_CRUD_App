@@ -6,6 +6,7 @@ use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @extends ServiceEntityRepository<Project>
@@ -29,7 +30,7 @@ class ProjectRepository extends ServiceEntityRepository
      * @param array $sortParams Sorting parameters
      * @return Project[] Returns an array of Project objects
      */
-    public function findWithFilters(array $filterParams, array $sortParams): array
+    public function findWithFilters(array $filterParams, array $sortParams, int $page = 1, int $limit = 9): Paginator
     {
         $qb = $this->createQueryBuilder('p');
 
@@ -48,7 +49,11 @@ class ProjectRepository extends ServiceEntityRepository
             $qb->addOrderBy('p.' . $field, $order);
         }
 
-        return $qb->getQuery()->getResult();
+        $query = $qb->getQuery()
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        return new Paginator($query);
     }
 
 

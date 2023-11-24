@@ -18,8 +18,8 @@ class ProjectController extends AbstractController
     public function index(Request $request, ProjectRepository $projectRepository): Response
     {
         // Sorting
-        $sortColumn = $request->query->get('sort', 'name'); 
-        $sortOrder = $request->query->get('order', 'asc'); 
+        $sortColumn = $request->query->get('sort', 'updated_at'); 
+        $sortOrder = $request->query->get('order', 'desc'); 
 
         // Filter
         $filterParams = [
@@ -29,10 +29,17 @@ class ProjectController extends AbstractController
 
          // Fetch projects with filters and sorting
         $projects = $projectRepository->findWithFilters($filterParams, [$sortColumn => $sortOrder]);
+        
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 9; 
+        // Pass the limit to the repository method
+        $paginator = $projectRepository->findWithFilters($filterParams, [$sortColumn => $sortOrder], $page, $limit);
 
         return $this->render('project/index.html.twig', [
-            'projects' => $projects,
-            'current_page' => 'home'
+            'projects' => $paginator,
+            'current_page' => 'home',
+            'current_page_number' => $page,
+            'total_pages' => ceil(count($paginator) / $limit)
         ]);
     }
 
@@ -48,7 +55,7 @@ class ProjectController extends AbstractController
             $entityManager->persist($project);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('create', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('project/new.html.twig', [

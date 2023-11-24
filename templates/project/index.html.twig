@@ -74,5 +74,15 @@
 				</table>
 			</div>
 		</div>
+		<!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination">
+                {% for i in 1..total_pages %}
+                    <li class="page-item {{ i == current_page_number ? 'active' : '' }}">
+                        <a class="page-link" href="{{ path('app_project_index', {'page': i}) }}">{{ i }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
 	</div>
 {% endblock %}
