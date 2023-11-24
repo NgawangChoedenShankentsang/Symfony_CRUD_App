@@ -10,12 +10,13 @@
 			<div class="card-body">
 				<table class="table border-primary">
 					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Date Created</th>
-						<th>Date Updated</th>
+						<th><a href="{{ path('app_project_index', {'sort': 'name', 'order': 'asc'}) }}">Name ↑</a> | <a href="{{ path('app_project_index', {'sort': 'name', 'order': 'desc'}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'description', 'order': 'asc'}) }}">Description ↑</a> | <a href="{{ path('app_project_index', {'sort': 'description', 'order': 'desc'}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'created_at', 'order': 'asc'}) }}">Date Created ↑</a> | <a href="{{ path('app_project_index', {'sort': 'created_at', 'order': 'desc'}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'updated_at', 'order': 'asc'}) }}">Date Updated ↑</a> | <a href="{{ path('app_project_index', {'sort': 'updated_at', 'order': 'desc'}) }}">↓</a></th>
 						<th width="240px">Action</th>
 					</tr>
+
 					{% for project in projects %}
 						<tr>
 							<td>{{ project.name }}</td>
