@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @extends ServiceEntityRepository<Project>
@@ -20,6 +21,36 @@ class ProjectRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Project::class);
     }
+    
+    /**
+     * Find projects with applied filters and sorting.
+     *
+     * @param array $filterParams Filter parameters
+     * @param array $sortParams Sorting parameters
+     * @return Project[] Returns an array of Project objects
+     */
+    public function findWithFilters(array $filterParams, array $sortParams): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        // Apply filters
+        if (!empty($filterParams['name'])) {
+            $qb->andWhere('p.name LIKE :name')
+               ->setParameter('name', '%' . $filterParams['name'] . '%');
+        }
+        if (!empty($filterParams['description'])) {
+            $qb->andWhere('p.description LIKE :description')
+               ->setParameter('description', '%' . $filterParams['description'] . '%');
+        }
+
+        // Apply sorting
+        foreach ($sortParams as $field => $order) {
+            $qb->addOrderBy('p.' . $field, $order);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return Project[] Returns an array of Project objects

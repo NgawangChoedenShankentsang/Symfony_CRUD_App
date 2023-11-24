@@ -5,7 +5,24 @@
 
 {% block body %}
 	<div class="container">
-		<h2 class="text-center my-5">DEMO-->License Project Manager</h2>
+	<h2 class="text-center my-5">DEMO-->License Project Manager</h2>
+		<!-- Filter Form -->
+        <form method="get" action="{{ path('app_project_index') }}" class="my-4">
+            <div class="row">
+                <div class="col">
+                    <input type="text" name="name" class="form-control" placeholder="Name" value="{{ app.request.query.get('name') }}">
+                </div>
+				<div class="col">
+                    <input type="text" name="description" class="form-control" placeholder="Description" value="{{ app.request.query.get('description') }}">
+                </div>
+
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="{{ path('app_project_index') }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </div>
+        </form>
+		
 		<div class="card border-primary mb-3">
 			<div class="card-body">
 				<table class="table border-primary">

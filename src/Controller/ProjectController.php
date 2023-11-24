@@ -17,12 +17,18 @@ class ProjectController extends AbstractController
     #[Route('/', name: 'app_project_index', methods: ['GET'])]
     public function index(Request $request, ProjectRepository $projectRepository): Response
     {
-        // Get sorting parameters from the request, with defaults
-        $sortColumn = $request->query->get('sort', 'name'); // Default sort by 'name'
-        $sortOrder = $request->query->get('order', 'asc'); // Default order 'asc'
+        // Sorting
+        $sortColumn = $request->query->get('sort', 'name'); 
+        $sortOrder = $request->query->get('order', 'asc'); 
 
-        // Fetch sorted projects
-        $projects = $projectRepository->findBy([], [$sortColumn => $sortOrder]);
+        // Filter
+        $filterParams = [
+            'name' => $request->query->get('name'),
+            'description' => $request->query->get('description')
+        ];
+
+         // Fetch projects with filters and sorting
+        $projects = $projectRepository->findWithFilters($filterParams, [$sortColumn => $sortOrder]);
 
         return $this->render('project/index.html.twig', [
             'projects' => $projects,
