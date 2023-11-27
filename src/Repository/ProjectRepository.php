@@ -22,6 +22,40 @@ class ProjectRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Project::class);
     }
+
+    public function countGroupByName(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.name, COUNT(p.id) as count')
+            ->groupBy('p.name');
+
+        $results = $qb->getQuery()->getResult();
+
+        $data = ['labels' => [], 'data' => []];
+        foreach ($results as $result) {
+            $data['labels'][] = $result['name'];
+            $data['data'][] = $result['count'];
+        }
+
+        return $data;
+    }
+
+    public function countGroupByDescription(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.description, COUNT(p.id) as count')
+            ->groupBy('p.description');
+
+        $results = $qb->getQuery()->getResult();
+
+        $data = ['labels' => [], 'data' => []];
+        foreach ($results as $result) {
+            $data['labels'][] = $result['description'];
+            $data['data'][] = $result['count'];
+        }
+
+        return $data;
+    }
     
     /**
      * Find projects with applied filters and sorting.

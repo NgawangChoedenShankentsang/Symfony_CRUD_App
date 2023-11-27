@@ -1,0 +1,70 @@
+{# templates/project/charts.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Project Charts{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mb-4">Project Data</h2>
+        
+        <div class="row">
+            <!-- Chart 1: Projects by Name -->
+            <div class="col-sm-4 col-md-8 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        Projects by Name
+                    </div>
+                    <div class="card-body">
+                        <canvas id="nameChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart 2: Projects by Description -->
+            <div class="col-sm-4 col-md-8 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        Projects by Description
+                    </div>
+                    <div class="card-body">
+                        <canvas id="descriptionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctxName = document.getElementById('nameChart').getContext('2d');
+            var nameChart = new Chart(ctxName, {
+                type: 'pie',
+                data: {
+                    labels: {{ nameData.labels|json_encode|raw }},
+                    datasets: [{
+                        data: {{ nameData.data|json_encode|raw }},
+                        backgroundColor: ['red', 'blue', 'green', 'yellow', 'purple', 'orange'],
+                    }]
+                }
+            });
+
+            var ctxDescription = document.getElementById('descriptionChart').getContext('2d');
+            var descriptionChart = new Chart(ctxDescription, {
+                type: 'pie',
+                data: {
+                    labels: {{ descriptionData.labels|json_encode|raw }},
+                    datasets: [{
+                        data: {{ descriptionData.data|json_encode|raw }},
+                        backgroundColor: ['red', 'blue', 'green', 'yellow', 'purple', 'orange'],
+                    }]
+                }
+            });
+        });
+    </script>
+{% endblock %}

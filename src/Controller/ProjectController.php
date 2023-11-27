@@ -101,4 +101,19 @@ class ProjectController extends AbstractController
 
         return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/project/charts', name: 'project_charts')]
+    public function projectCharts(ProjectRepository $projectRepository): Response
+    {
+        $nameData = $projectRepository->countGroupByName();
+        $descriptionData = $projectRepository->countGroupByDescription();
+
+        return $this->render('project/charts.html.twig', [
+            'nameData' => $nameData,
+            'descriptionData' => $descriptionData,
+            'current_page' => 'chart'
+
+        ]);
+    }
+
 }
