@@ -27,21 +27,23 @@ class ProjectController extends AbstractController
             'description' => $request->query->get('description')
         ];
 
-         // Fetch projects with filters and sorting
-        $projects = $projectRepository->findWithFilters($filterParams, [$sortColumn => $sortOrder]);
-        
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 9; 
-        // Pass the limit to the repository method
+
+        // Fetch projects with filters, sorting, and pagination
         $paginator = $projectRepository->findWithFilters($filterParams, [$sortColumn => $sortOrder], $page, $limit);
 
         return $this->render('project/index.html.twig', [
             'projects' => $paginator,
-            'current_page' => 'home',
             'current_page_number' => $page,
-            'total_pages' => ceil(count($paginator) / $limit)
+            'total_pages' => ceil(count($paginator) / $limit),
+            'current_sort_column' => $sortColumn,
+            'current_sort_order' => $sortOrder,
+            'filter_name' => $filterParams['name'] ?? '',
+            'filter_description' => $filterParams['description'] ?? ''
         ]);
     }
+
 
 
     #[Route('/new', name: 'create', methods: ['GET', 'POST'])]

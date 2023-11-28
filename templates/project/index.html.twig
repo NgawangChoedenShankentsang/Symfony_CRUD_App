@@ -22,15 +22,15 @@
                 </div>
             </div>
         </form>
-		
+		<!-- Filter Form End -->
 		<div class="card border-primary mb-3">
 			<div class="card-body">
 				<table class="table border-primary">
 					<tr>
-						<th><a href="{{ path('app_project_index', {'sort': 'name', 'order': 'asc'}) }}">Name ↑</a> | <a href="{{ path('app_project_index', {'sort': 'name', 'order': 'desc'}) }}">↓</a></th>
-						<th><a href="{{ path('app_project_index', {'sort': 'description', 'order': 'asc'}) }}">Description ↑</a> | <a href="{{ path('app_project_index', {'sort': 'description', 'order': 'desc'}) }}">↓</a></th>
-						<th><a href="{{ path('app_project_index', {'sort': 'created_at', 'order': 'asc'}) }}">Date Created ↑</a> | <a href="{{ path('app_project_index', {'sort': 'created_at', 'order': 'desc'}) }}">↓</a></th>
-						<th><a href="{{ path('app_project_index', {'sort': 'updated_at', 'order': 'asc'}) }}">Date Updated ↑</a> | <a href="{{ path('app_project_index', {'sort': 'updated_at', 'order': 'desc'}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'name', 'order': 'asc', 'name': filter_name, 'description': filter_description}) }}">Name ↑</a> | <a href="{{ path('app_project_index', {'sort': 'name', 'order': 'desc', 'name': filter_name, 'description': filter_description}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'description', 'order': 'asc', 'name': filter_name, 'description': filter_description}) }}">Description ↑</a> | <a href="{{ path('app_project_index', {'sort': 'description', 'order': 'desc', 'name': filter_name, 'description': filter_description}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'created_at', 'order': 'asc', 'name': filter_name, 'description': filter_description}) }}">Date Created ↑</a> | <a href="{{ path('app_project_index', {'sort': 'created_at', 'order': 'desc', 'name': filter_name, 'description': filter_description}) }}">↓</a></th>
+						<th><a href="{{ path('app_project_index', {'sort': 'updated_at', 'order': 'asc', 'name': filter_name, 'description': filter_description}) }}">Date Updated ↑</a> | <a href="{{ path('app_project_index', {'sort': 'updated_at', 'order': 'desc', 'name': filter_name, 'description': filter_description}) }}">↓</a></th>
 						<th width="240px">Action</th>
 					</tr>
 
@@ -76,13 +76,30 @@
 		</div>
 		<!-- Pagination -->
         <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination">
-                {% for i in 1..total_pages %}
-                    <li class="page-item {{ i == current_page_number ? 'active' : '' }}">
-                        <a class="page-link" href="{{ path('app_project_index', {'page': i}) }}">{{ i }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </nav>
+			<ul class="pagination justify-content-end">
+				{% set numPagesToShow = 2 %} {# Number of pages to show before and after the current page #}
+				{% set ellipsisShown = false %}
+
+				{% for i in 1..total_pages %}
+					{% if i == 1 or i == total_pages or (i >= current_page_number - numPagesToShow and i <= current_page_number + numPagesToShow) %}
+						{% set ellipsisShown = false %}
+						<li class="page-item {{ i == current_page_number ? 'active' : '' }}">
+							<a class="page-link" href="{{ path('app_project_index', {
+								'page': i,
+								'sort': current_sort_column,
+								'order': current_sort_order,
+								'name': filter_name,
+								'description': filter_description
+							}) }}">{{ i }}</a>
+						</li>
+					{% elseif not ellipsisShown %}
+						{% set ellipsisShown = true %}
+						<li class="page-item disabled"><span class="page-link">...</span></li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</nav>
+
+		<!-- Pagination End -->
 	</div>
 {% endblock %}
