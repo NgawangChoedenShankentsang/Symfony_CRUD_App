@@ -74,10 +74,25 @@
 				</table>
 			</div>
 		</div>
-		<!-- Pagination -->
-        <nav aria-label="Page navigation" class="mt-4">
-			<ul class="pagination justify-content-end">
-				{% set numPagesToShow = 2 %} {# Number of pages to show before and after the current page #}
+
+		<!-- Pagination and Row Selection -->
+		<nav aria-label="Page navigation" class="mt-4">
+			<div class="d-flex justify-content-between align-items-center">
+				<!-- Row Selection Dropdown -->
+				<div class="dropdown">
+					<button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownRowSelection" data-bs-toggle="dropdown" aria-expanded="false">
+						Rows: {{ limit }}
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownRowSelection">
+						<li><a class="dropdown-item" href="{{ path('app_project_index', {'limit': 9, 'page': current_page_number, 'name': filter_name, 'description': filter_description}) }}">9</a></li>
+						<li><a class="dropdown-item" href="{{ path('app_project_index', {'limit': 15, 'page': current_page_number, 'name': filter_name, 'description': filter_description}) }}">15</a></li>
+						<li><a class="dropdown-item" href="{{ path('app_project_index', {'limit': 25, 'page': current_page_number, 'name': filter_name, 'description': filter_description}) }}">25</a></li>
+					</ul>
+				</div>
+
+			<!-- Pagination -->
+			<ul class="pagination">
+				{% set numPagesToShow = 2 %}
 				{% set ellipsisShown = false %}
 
 				{% for i in 1..total_pages %}
@@ -86,6 +101,7 @@
 						<li class="page-item {{ i == current_page_number ? 'active' : '' }}">
 							<a class="page-link" href="{{ path('app_project_index', {
 								'page': i,
+								'limit': limit,
 								'sort': current_sort_column,
 								'order': current_sort_order,
 								'name': filter_name,
@@ -98,8 +114,8 @@
 					{% endif %}
 				{% endfor %}
 			</ul>
-		</nav>
+		</div>
+	</nav>
 
-		<!-- Pagination End -->
 	</div>
 {% endblock %}

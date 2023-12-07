@@ -28,7 +28,7 @@ class ProjectController extends AbstractController
         ];
 
         $page = max(1, $request->query->getInt('page', 1));
-        $limit = 9; 
+        $limit = $request->query->getInt('limit', 9);
 
         // Fetch projects with filters, sorting, and pagination
         $paginator = $projectRepository->findWithFilters($filterParams, [$sortColumn => $sortOrder], $page, $limit);
@@ -39,6 +39,7 @@ class ProjectController extends AbstractController
             'total_pages' => ceil(count($paginator) / $limit),
             'current_sort_column' => $sortColumn,
             'current_sort_order' => $sortOrder,
+            'limit' => $limit,
             'filter_name' => $filterParams['name'] ?? '',
             'filter_description' => $filterParams['description'] ?? ''
         ]);
